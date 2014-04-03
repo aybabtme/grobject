@@ -21,3 +21,8 @@ _testmain.go
 
 *.exe
 *.test
+testdata/big.json
+testdata/huge.json
+testdata/huge.json.gz
+testdata/big.json.gz
+grobject
