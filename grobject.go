@@ -55,12 +55,23 @@ func main() {
 	g := gexf.NewGraph()
 	g.SetNodeAttrs(attrs)
 
+	i := -1
+	var id string
+
 	for rObj := range decoded {
 		addr, label, attr := extractNode(&rObj)
-		g.AddNode(addr, label, attr)
+
+		if rObj.Address == 0 {
+			id = g.GetID(i)
+			i--
+		} else {
+			id = g.GetID(addr)
+		}
+
+		g.AddNode(id, label, attr)
 
 		for _, ref := range rObj.References {
-			g.AddEdge(addr, strconv.FormatUint(ref, 16))
+			g.AddEdge(id, g.GetID(ref))
 		}
 	}
 
