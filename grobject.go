@@ -85,35 +85,49 @@ func extractNode(r *rubyobj.RubyObject) (addr string, label string, attr []gexf.
 	label = r.Type.Name()
 
 	attr = []gexf.AttrValue{
-		{Title: "type", Value: label},
-		{Title: "value", Value: r.Value},
-		{Title: "name", Value: r.Name},
-		{Title: "nodeType", Value: r.NodeType},
-		{Title: "address", Value: addr},
-		{Title: "class", Value: r.Class},
-		{Title: "default", Value: r.Default},
-		{Title: "generation", Value: r.Generation},
+		{Title: "broken", Value: r.Broken()},
 		{Title: "bytesize", Value: r.Bytesize},
+		{Title: "capacity", Value: r.Capacity},
+		{Title: "default", Value: r.Default},
+		{Title: "embedded", Value: r.Embedded()},
 		{Title: "fd", Value: r.Fd},
-		{Title: "file", Value: r.File},
-		{Title: "encoding", Value: r.Encoding},
-		{Title: "method", Value: r.Method},
+		{Title: "frozen", Value: r.Frozen()},
+		{Title: "fstring", Value: r.Fstring()},
+		{Title: "generation", Value: r.Generation},
 		{Title: "ivars", Value: r.Ivars},
 		{Title: "length", Value: r.Length},
 		{Title: "line", Value: r.Line},
-		{Title: "memsize", Value: r.Memsize},
-		{Title: "capacity", Value: r.Capacity},
-		{Title: "size", Value: r.Size},
-		{Title: "struct", Value: r.Struct},
-		{Title: "wbProtected", Value: r.GcWbProtected()},
-		{Title: "old", Value: r.GcOld()},
 		{Title: "marked", Value: r.GcMarked()},
-		{Title: "broken", Value: r.Broken()},
-		{Title: "frozen", Value: r.Frozen()},
-		{Title: "fstring", Value: r.Fstring()},
+		{Title: "memsize", Value: r.Memsize},
+		{Title: "old", Value: r.GcOld()},
 		{Title: "shared", Value: r.Shared()},
-		{Title: "embedded", Value: r.Embedded()},
+		{Title: "size", Value: r.Size},
+		{Title: "wbProtected", Value: r.GcWbProtected()},
 	}
+
+	accString := func(title string, val string) {
+		if val != "" {
+			attr = append(attr, gexf.AttrValue{Title: title, Value: val})
+		}
+	}
+
+	accInterface := func(title string, val interface{}) {
+		if val != nil {
+			attr = append(attr, gexf.AttrValue{Title: title, Value: val})
+		}
+	}
+
+	accString("address", addr)
+	accString("class", strconv.FormatUint(r.Class, 16))
+	accString("encoding", r.Encoding)
+	accString("file", r.File)
+	accString("method", r.Method)
+	accString("name", r.Name)
+	accString("nodeType", r.NodeType)
+	accString("struct", r.Struct)
+	accString("type", label)
+	accInterface("value", r.Value)
+
 	return
 }
 
